@@ -6,16 +6,45 @@
 //
 
 import SwiftUI
+import PhotosUI
+
+class PhotoLibraryManager {
+    func requestPermission(completion: @escaping (Bool) -> Void) {
+        PHPhotoLibrary.requestAuthorization(for: .readWrite) { status in
+            DispatchQueue.main.async {
+                switch status {
+                case .authorized:
+                    completion(true)
+                    
+                default:
+                    completion(false)
+                }
+            }
+        }
+    }
+}
 
 struct AllowAccessView: View {
+    @State var presentingModal = false
+    
+    struct Events {
+        var requestPermission: ((Bool) -> Void) -> Void = { _ in }
+    }
+    
+    var events = Events()
+    
     var body: some View {
         VStack {
             Spacer()
             Button {
-                print("Tapped")
+                presentingModal.toggle()
+                events.requestPermission { access in
+                    presentingModal.toggle()
+                }
             } label: {
                 Text("Allow Access")
                     .foregroundColor(Color.white)
+                    .font(.system(size: 16, weight: .semibold))
                     .frame(maxWidth: .infinity, maxHeight: 50)
                     .background {
                         Rectangle()
@@ -26,6 +55,10 @@ struct AllowAccessView: View {
             .padding(.bottom)
         }
         .background(Color.black)
+        .sheet(isPresented: $presentingModal) {
+            ContentView()
+        }
+        
         
     }
 }

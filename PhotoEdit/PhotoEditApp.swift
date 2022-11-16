@@ -13,7 +13,7 @@ struct PhotoEditApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            AllowAccessView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
