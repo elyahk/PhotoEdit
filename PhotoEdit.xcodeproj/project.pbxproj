@@ -16,6 +16,7 @@
 		6EF2A70C2925195600DDA4C3 /* PhotoEditTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF2A70B2925195600DDA4C3 /* PhotoEditTests.swift */; };
 		6EF2A7162925195600DDA4C3 /* PhotoEditUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF2A7152925195600DDA4C3 /* PhotoEditUITests.swift */; };
 		6EF2A7182925195600DDA4C3 /* PhotoEditUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF2A7172925195600DDA4C3 /* PhotoEditUITestsLaunchTests.swift */; };
+		6EF2A72529251AE300DDA4C3 /* AllowAccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF2A72429251AE300DDA4C3 /* AllowAccessView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		6EF2A7112925195600DDA4C3 /* PhotoEditUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhotoEditUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6EF2A7152925195600DDA4C3 /* PhotoEditUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoEditUITests.swift; sourceTree = "<group>"; };
 		6EF2A7172925195600DDA4C3 /* PhotoEditUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoEditUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		6EF2A72429251AE300DDA4C3 /* AllowAccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllowAccessView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 				6EF2A6FE2925195600DDA4C3 /* Persistence.swift */,
 				6EF2A7002925195600DDA4C3 /* PhotoEdit.xcdatamodeld */,
 				6EF2A6FB2925195600DDA4C3 /* Preview Content */,
+				6EF2A72429251AE300DDA4C3 /* AllowAccessView.swift */,
 			);
 			path = PhotoEdit;
 			sourceTree = "<group>";
@@ -267,6 +270,7 @@
 				6EF2A6F82925195500DDA4C3 /* ContentView.swift in Sources */,
 				6EF2A7022925195600DDA4C3 /* PhotoEdit.xcdatamodeld in Sources */,
 				6EF2A6F62925195500DDA4C3 /* PhotoEditApp.swift in Sources */,
+				6EF2A72529251AE300DDA4C3 /* AllowAccessView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
