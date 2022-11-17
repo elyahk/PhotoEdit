@@ -48,6 +48,6 @@ struct AllowAccessView_Previews: PreviewProvider {
 
 extension AllowAccessView {
     struct Events {
-        var requestPermission: ((Bool) -> Void) -> Void = { _ in }
+        var requestPermission: (@escaping (Bool) -> Void) -> Void = { _ in }
     }
 }
