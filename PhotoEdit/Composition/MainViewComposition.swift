@@ -21,6 +21,15 @@ class MainViewComposition {
         return view
     }
     
+    func galleryView() -> GalleryView {
+        let galleryView = GalleryView(contentImages: [])
+        manager.getPhotos { images in
+            galleryView.contentImages = images
+        }
+        
+        return galleryView
+    }
+    
     func hasAccess() -> Bool {
         manager.hasAccessPhotos()
     }

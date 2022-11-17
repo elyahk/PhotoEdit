@@ -8,6 +8,7 @@
 import PhotosUI
 
 class PhotoLibraryManager {
+    private var bridge: PHAssetImageBridge?
     
     func requestPermission(completion: @escaping (Bool) -> Void) {
         PHPhotoLibrary.requestAuthorization(for: .readWrite) { [weak self] status in
@@ -25,6 +26,17 @@ class PhotoLibraryManager {
         return hasAccess
     }
     
+    func getPhotos(completion: @escaping ([UIImage]) -> Void) {
+        let result = fetchPhotosAssets()
+        bridge = PHAssetImageBridge(result: result)
+        
+        bridge?.getPhotos { images in
+            DispatchQueue.main.async {
+                completion(images)
+            }
+        }
+    }
+    
     private func validateAuthorization(status: PHAuthorizationStatus) -> Bool {
         switch status {
         case .authorized:
@@ -33,6 +45,14 @@ class PhotoLibraryManager {
         default:
             return false
         }
+    }
+    
+    private func fetchPhotosAssets() -> PHFetchResult<PHAsset> {
+        let options = PHFetchOptions()
+        options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+        let assets = PHAsset.fetchAssets(with: options)
+        
+        return assets
     }
 }
 
