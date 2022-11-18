@@ -24,36 +24,40 @@ struct GalleryView: View {
     ]
     
     var body: some View {
-        ScrollView {
-            LazyVGrid(
-                columns: columns,
-                alignment: .center,
-                spacing: 2.0,
-                pinnedViews: []
-            ) {
-                ForEach(images, id: \.self) { image in
-                    Rectangle()
-                        .aspectRatio(1, contentMode: .fit)
-                        .overlay(
+        NavigationStack {
+            ScrollView {
+                LazyVGrid(
+                    columns: columns,
+                    alignment: .center,
+                    spacing: 2.0,
+                    pinnedViews: []
+                ) {
+                    ForEach(images, id: \.self) { image in
+                        NavigationLink {
                             Image(uiImage: image)
-                                .resizable()
-                                .scaledToFill()
-                                .onTapGesture {
-                                    selectedImage = image
-                                    presentImage.toggle()
-                                }
-                        )
-                        .clipShape(Rectangle())
-                        .sheet(isPresented: $presentImage) {
-                            Image(uiImage: selectedImage)
                         }
+                    label: {
+                        Rectangle()
+                            .aspectRatio(1, contentMode: .fit)
+                            .overlay(
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFill()
+                            )
+                            .clipShape(Rectangle())
+                            .sheet(isPresented: $presentImage) {
+                                
+                            }
+                    }
+                        
+                    }
                 }
             }
-        }
-        .background(Color.black)
-        .onAppear {
-            events.loadPhotos { images in
-                self.images = images
+            .background(Color.black)
+            .onAppear {
+                events.loadPhotos { images in
+                    self.images = images
+                }
             }
         }
     }
@@ -68,7 +72,7 @@ extension GalleryView {
 }
 
 struct GalleryView_Preview: PreviewProvider {
-   static var previews: some View {
+    static var previews: some View {
         galleryView()
     }
     
