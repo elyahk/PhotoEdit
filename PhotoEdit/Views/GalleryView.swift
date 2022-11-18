@@ -7,14 +7,15 @@
 
 import SwiftUI
 
+class Gallery: ObservableObject {
+    @Published var images: [UIImage] = []
+}
+
 struct GalleryView: View {
-    @State var contentImages: [UIImage]
+    var events: Events = .init()
+    @State var images: [UIImage] = []
     @State private var presentImage: Bool = false
     @State private var selectedImage: UIImage = UIImage()
-    
-    init(contentImages: [UIImage]) {
-        self.contentImages = contentImages
-    }
     
     private var columns = [
         GridItem(.flexible(), spacing: 2.0),
@@ -30,7 +31,7 @@ struct GalleryView: View {
                 spacing: 2.0,
                 pinnedViews: []
             ) {
-                ForEach(contentImages, id: \.self) { image in
+                ForEach(images, id: \.self) { image in
                     Rectangle()
                         .aspectRatio(1, contentMode: .fit)
                         .overlay(
@@ -50,6 +51,19 @@ struct GalleryView: View {
             }
         }
         .background(Color.black)
+        .onAppear {
+            events.loadPhotos { images in
+                self.images = images
+            }
+        }
+    }
+}
+
+// MARK: - GalleryView
+
+extension GalleryView {
+    struct Events {
+        var loadPhotos: (@escaping ([UIImage]) -> Void) -> Void = { _ in }
     }
 }
 
@@ -59,7 +73,10 @@ struct GalleryView_Preview: PreviewProvider {
     }
     
     static func galleryView() -> some View {
-        let view = GalleryView(contentImages: images())
+        var view = GalleryView()
+        view.events.loadPhotos = { completion in
+            completion(images())
+        }
         
         return view
     }

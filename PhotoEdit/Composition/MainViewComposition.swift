@@ -22,9 +22,11 @@ class MainViewComposition {
     }
     
     func galleryView() -> GalleryView {
-        let galleryView = GalleryView(contentImages: [])
-        manager.getPhotos { images in
-            galleryView.contentImages = images
+        var galleryView = GalleryView()
+        galleryView.events.loadPhotos = { completion in
+            self.manager.getPhotos { images in
+                completion(images)
+            }
         }
         
         return galleryView
