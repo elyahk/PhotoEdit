@@ -6,9 +6,14 @@
 //
 
 import SwiftUI
+import CoreImage
 
 struct ImageEditorView: View {
-    @State var image: UIImage = UIImage(named: "image-1")!
+    @State var image: UIImage
+    
+    init(image: UIImage) {
+        self.image = image
+    }
     
     private var columns = [
         GridItem(.fixed(100), spacing: 2.0)
@@ -108,14 +113,40 @@ struct ImageEditorView: View {
         )
         .navigationBarTitleDisplayMode(.inline)
         .background(Color.black)
+        .onAppear {
+            DispatchQueue.global().async {
+                let newImage = FilterImage.filterImage(image: image)
+                DispatchQueue.main.async {
+                    self.image = newImage ?? UIImage(named: "image-3")!
+                }
+            }
+        }
     }
 }
-
 
 struct ImageEditorView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            ImageEditorView()
+            ImageEditorView(image: UIImage(named: "image-1")!)
         }
+    }
+}
+
+class FilterImage {
+    static func filterImage(image: UIImage) -> UIImage? {
+            let context = CIContext()
+            let filter = CIFilter(name: "CISepiaTone")!
+            filter.setValue(0.8, forKey: kCIInputIntensityKey)
+            let ciImage = CIImage(cgImage: image.cgImage!)
+                                       // 3
+            filter.setValue(ciImage, forKey: kCIInputImageKey)
+            let result = filter.outputImage!                               // 4
+            let cgImage = context.createCGImage(result, from: result.extent)
+            
+            guard let cgImage = cgImage else {
+                return nil
+            }
+            
+            return UIImage(cgImage: cgImage)
     }
 }

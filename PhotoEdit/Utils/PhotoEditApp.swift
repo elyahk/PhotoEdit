@@ -17,6 +17,7 @@ struct PhotoEditApp: App {
             if !mainViewComposition.hasAccess() {
                 mainViewComposition.allowAccessView()
             } else {
+//                ImageEditorView()
                 mainViewComposition.galleryView()
                     .environmentObject(Gallery())
                     .environment(\.managedObjectContext, persistenceController.container.viewContext)
