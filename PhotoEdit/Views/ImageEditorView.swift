@@ -10,6 +10,8 @@ import CoreImage
 
 struct ImageEditorView: View {
     @State var image: UIImage
+    @State var images: [UIImage] = []
+    @State var currentIndex = 0
     
     init(image: UIImage) {
         self.image = image
@@ -35,11 +37,14 @@ struct ImageEditorView: View {
                     spacing: 2.0,
                     pinnedViews: []
                 ) {
-                    ForEach(0...10, id: \.self) { id in
+                    ForEach(images, id: \.self) { image in
                         Image(uiImage: image)
                             .resizable()
                             .frame(width: 100, height: 100)
                             .foregroundColor(.red)
+                            .onTapGesture {
+                                self.image = image
+                            }
                     }
                 }
                 .frame(height: 100.0)
@@ -117,9 +122,10 @@ struct ImageEditorView: View {
         .background(Color.black)
         .onAppear {
             DispatchQueue.global().async {
-                let newImage = FilterImage.filterImage(image: image)
+                let images = FilterImage().getFilteredImages(image: image)
+                
                 DispatchQueue.main.async {
-                    self.image = newImage ?? UIImage(named: "image-3")!
+                    self.images = images
                 }
             }
         }
@@ -135,20 +141,43 @@ struct ImageEditorView_Previews: PreviewProvider {
 }
 
 class FilterImage {
-    static func filterImage(image: UIImage) -> UIImage? {
-            let context = CIContext()
-            let filter = CIFilter(name: "CISepiaTone")!
-            filter.setValue(0.8, forKey: kCIInputIntensityKey)
-            let ciImage = CIImage(cgImage: image.cgImage!)
-                                       // 3
-            filter.setValue(ciImage, forKey: kCIInputImageKey)
-            let result = filter.outputImage!                               // 4
-            let cgImage = context.createCGImage(result, from: result.extent)
-            
-            guard let cgImage = cgImage else {
+    let context = CIContext()
+    var CIFilterNames = [
+        "CIPhotoEffectChrome",
+        "CIPhotoEffectFade",
+        "CIPhotoEffectInstant",
+        "CIPhotoEffectNoir",
+        "CIPhotoEffectProcess",
+        "CIPhotoEffectTonal",
+        "CIPhotoEffectTransfer",
+        "CISepiaTone"
+    ]
+    
+    func getFilteredImages(image: UIImage) -> [UIImage] {
+        let images: [UIImage] = CIFilterNames.map {
+            guard let filter = CIFilter(name: $0), let image = filterImage(image: image, filter: filter) else {
                 return nil
             }
             
-            return UIImage(cgImage: cgImage)
+            return image
+        }.compactMap { $0 }
+        
+        return images
+    }
+    
+    func filterImage(image: UIImage, filter: CIFilter) -> UIImage? {
+        guard let cgImage = image.cgImage else { return nil }
+        
+        let ciImage = CIImage(cgImage: cgImage)
+        filter.setValue(ciImage, forKey: kCIInputImageKey)
+        
+        guard let result = filter.outputImage else { return nil}                        // 4
+        let resultCGImage = context.createCGImage(result, from: result.extent)
+        
+        guard let cgImage = resultCGImage else {
+            return nil
+        }
+        
+        return UIImage(cgImage: cgImage)
     }
 }

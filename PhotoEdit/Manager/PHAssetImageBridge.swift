@@ -41,7 +41,7 @@ class PHAssetImageBridge {
         
         switch type {
         case let .thumbnail(width, height):
-            size = CGSize(width: width, height: height)
+            size = CGSize(width: 500.0, height: 500.0)
         }
         
         manager.requestImage(for: asset, targetSize: size, contentMode: .aspectFill, options: option) { image, info in
