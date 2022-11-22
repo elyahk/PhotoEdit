@@ -28,20 +28,22 @@ struct ImageEditorView: View {
                 .padding([.top], 40)
                 .frame(maxWidth: .infinity)
             Spacer()
-            LazyHGrid(
-                rows: columns,
-                alignment: .top,
-                spacing: 2.0,
-                pinnedViews: []
-            ) {
-                ForEach(0...100, id: \.self) { id in
-                    Image(uiImage: image)
-                        .resizable()
-                        .frame(width: 100, height: 100)
-                        .foregroundColor(.red)
+            ScrollView(.horizontal) {
+                LazyHGrid(
+                    rows: columns,
+                    alignment: .top,
+                    spacing: 2.0,
+                    pinnedViews: []
+                ) {
+                    ForEach(0...10, id: \.self) { id in
+                        Image(uiImage: image)
+                            .resizable()
+                            .frame(width: 100, height: 100)
+                            .foregroundColor(.red)
+                    }
                 }
+                .frame(height: 100.0)
             }
-            .frame(height: 100.0)
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
