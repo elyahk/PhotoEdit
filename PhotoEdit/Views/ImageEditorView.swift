@@ -7,13 +7,16 @@
 
 import SwiftUI
 import CoreImage
+import Photos
 
 struct ImageEditorView: View {
+    @State var photo: Photo
     @State var image: UIImage
     @State var images: [UIImage] = []
     @State var currentIndex = 0
     
-    init(image: UIImage) {
+    init(photo: Photo, image: UIImage) {
+        self.photo = photo
         self.image = image
     }
     
@@ -121,7 +124,21 @@ struct ImageEditorView: View {
         .navigationBarTitleDisplayMode(.inline)
         .background(Color.black)
         .onAppear {
-            DispatchQueue.global().async {
+            Task {
+                await getHighQualityImage()
+            }
+        }
+    }
+    
+    func getHighQualityImage() async {
+        DispatchQueue.main.async {
+            photo.getHighQualityImage { image in
+                guard let image = image else { return }
+                
+                DispatchQueue.main.async {
+                    self.image = image
+                }
+                
                 let images = FilterImage().getFilteredImages(image: image)
                 
                 DispatchQueue.main.async {
@@ -135,7 +152,7 @@ struct ImageEditorView: View {
 struct ImageEditorView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            ImageEditorView(image: UIImage(named: "image-1")!)
+            ImageEditorView(photo: Photo(thumbnail: UIImage(named: "image-1")!, asset: PHAsset()),image: UIImage(named: "image-1")!)
         }
     }
 }
@@ -181,3 +198,15 @@ class FilterImage {
         return UIImage(cgImage: cgImage)
     }
 }
+//
+//extension Photo {
+//    func getHighQualityImage(complation: @escaping (UIImage?) -> Void) {
+//        let requestImageOption = PHImageRequestOptions()
+//        requestImageOption.deliveryMode = PHImageRequestOptionsDeliveryMode.highQualityFormat
+//        
+//        let manager = PHImageManager.default()
+//        manager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode:PHImageContentMode.default, options: requestImageOption) { image, _ in
+//            complation(image)
+//        }
+//    }
+//}

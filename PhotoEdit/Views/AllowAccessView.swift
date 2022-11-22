@@ -33,7 +33,7 @@ struct AllowAccessView: View {
         }
         .background(Color.black)
         .fullScreenCover(isPresented: $presentingModal) {
-            ContentView()
+//            GalleryView(events: <#T##Events#>)
         }
     }
 }

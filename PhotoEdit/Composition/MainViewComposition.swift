@@ -32,6 +32,17 @@ class MainViewComposition {
         return galleryView
     }
     
+    func galleryView2() -> GalleryView {
+        var galleryView = GalleryView()
+        galleryView.events.loadPhotos2 = { completion in
+            self.manager.getPhotos2 { photos in
+                completion(photos)
+            }
+        }
+        
+        return galleryView
+    }
+    
     func hasAccess() -> Bool {
         manager.hasAccessPhotos()
     }

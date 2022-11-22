@@ -14,6 +14,7 @@ class Gallery: ObservableObject {
 struct GalleryView: View {
     var events: Events = .init()
     @State var images: [UIImage] = []
+    @State var photos: [Photo] = []
     @State private var presentImage: Bool = false
     @State private var selectedImage: UIImage = UIImage()
     
@@ -32,15 +33,15 @@ struct GalleryView: View {
                     spacing: 2.0,
                     pinnedViews: []
                 ) {
-                    ForEach(images, id: \.self) { image in
+                    ForEach(photos, id: \.self) { photo in
                         NavigationLink {
-                            ImageEditorView(image: image)
+                            ImageEditorView(photo: photo, image: photo.thumbnail)
                         }
                     label: {
                         Rectangle()
                             .aspectRatio(1, contentMode: .fit)
                             .overlay(
-                                Image(uiImage: image)
+                                Image(uiImage: photo.thumbnail)
                                     .resizable()
                                     .scaledToFill()
                             )
@@ -58,6 +59,9 @@ struct GalleryView: View {
                 events.loadPhotos { images in
                     self.images = images
                 }
+                events.loadPhotos2 { photos in
+                    self.photos = photos
+                }
             }
         }
     }
@@ -68,6 +72,7 @@ struct GalleryView: View {
 extension GalleryView {
     struct Events {
         var loadPhotos: (@escaping ([UIImage]) -> Void) -> Void = { _ in }
+        var loadPhotos2: (@escaping ([Photo]) -> Void) -> Void = { _ in }
     }
 }
 

@@ -37,6 +37,17 @@ class PhotoLibraryManager {
         }
     }
     
+    func getPhotos2(completion: @escaping ([Photo]) -> Void) {
+        let result = fetchPhotosAssets()
+        bridge = PHAssetImageBridge(result: result)
+        
+        bridge?.getPhotos2 { photos in
+            DispatchQueue.main.async {
+                completion(photos)
+            }
+        }
+    }
+    
     private func validateAuthorization(status: PHAuthorizationStatus) -> Bool {
         switch status {
         case .authorized:
