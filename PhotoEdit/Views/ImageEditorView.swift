@@ -49,7 +49,7 @@ struct ImageEditorView: View {
                             .foregroundColor(.red)
                             .scaledToFit()
                             .onTapGesture {
-                                
+                                self.highQualityImage = filteredImage
                             }
                     }
                 }
