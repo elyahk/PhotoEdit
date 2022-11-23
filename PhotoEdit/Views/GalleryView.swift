@@ -35,7 +35,7 @@ struct GalleryView: View {
                 ) {
                     ForEach(photos, id: \.self) { photo in
                         NavigationLink {
-                            ImageEditorView(photo: photo, image: photo.thumbnail)
+                            ImageEditorView(photo: photo, filterManager: ImageFilterManager.shared)
                         }
                     label: {
                         Rectangle()

@@ -11,13 +11,15 @@ import Photos
 
 struct ImageEditorView: View {
     @State var photo: Photo
-    @State var image: UIImage
-    @State var images: [UIImage] = []
+    @State var filteredImages: [UIImage] = []
     @State var currentIndex = 0
+    @State var highQualityImage: UIImage?
     
-    init(photo: Photo, image: UIImage) {
+    var filterManager: ImageFilterManager
+    
+    init(photo: Photo, filterManager: ImageFilterManager) {
         self.photo = photo
-        self.image = image
+        self.filterManager = filterManager
     }
     
     private var columns = [
@@ -27,7 +29,7 @@ struct ImageEditorView: View {
     var body: some View {
         VStack {
             Spacer()
-            Image(uiImage: image)
+            Image(uiImage: highQualityImage ?? photo.thumbnail)
                 .resizable()
                 .scaledToFit()
                 .padding([.top], 40)
@@ -40,14 +42,14 @@ struct ImageEditorView: View {
                     spacing: 2.0,
                     pinnedViews: []
                 ) {
-                    ForEach(images, id: \.self) { image in
-                        Image(uiImage: image)
+                    ForEach(filteredImages, id: \.self) { filteredImage in
+                        Image(uiImage: filteredImage)
                             .resizable()
                             .frame(width: 100, height: 100)
                             .foregroundColor(.red)
                             .scaledToFit()
                             .onTapGesture {
-                                self.image = image
+                                
                             }
                     }
                 }
@@ -136,17 +138,15 @@ struct ImageEditorView: View {
     
     func getHighQualityImage() async {
         DispatchQueue.main.async {
-            photo.getHighQualityImage { image in
-                guard let image = image else { return }
+            photo.getHighQualityImage { highQualityImage in
+                guard let highQualityImage = highQualityImage else { return }
+                
+                self.highQualityImage = highQualityImage
+                
+                let filteredImages = filterManager.getFilteredImages(image: highQualityImage)
                 
                 DispatchQueue.main.async {
-                    self.image = image
-                }
-                
-                let images = FilterImage().getFilteredImages(image: image)
-                
-                DispatchQueue.main.async {
-                    self.images = images
+                    self.filteredImages = filteredImages
                 }
             }
         }
@@ -156,49 +156,10 @@ struct ImageEditorView: View {
 struct ImageEditorView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-                ImageEditorView(photo: Photo(thumbnail: UIImage(named: "image-1")!, asset: PHAsset()),image: UIImage(named: "image-1")!)
+                ImageEditorView(
+                    photo: Photo(thumbnail: UIImage(named: "image-1")!, asset: PHAsset()),
+                    filterManager: ImageFilterManager.shared
+                )
         }
-    }
-}
-
-class FilterImage {
-    let context = CIContext()
-    var CIFilterNames = [
-        "CIPhotoEffectChrome",
-        "CIPhotoEffectFade",
-        "CIPhotoEffectInstant",
-        "CIPhotoEffectNoir",
-        "CIPhotoEffectProcess",
-        "CIPhotoEffectTonal",
-        "CIPhotoEffectTransfer",
-        "CISepiaTone"
-    ]
-    
-    func getFilteredImages(image: UIImage) -> [UIImage] {
-        let images: [UIImage] = CIFilterNames.map {
-            guard let filter = CIFilter(name: $0), let image = filterImage(image: image, filter: filter) else {
-                return nil
-            }
-            
-            return image
-        }.compactMap { $0 }
-        
-        return images
-    }
-    
-    func filterImage(image: UIImage, filter: CIFilter) -> UIImage? {
-        guard let cgImage = image.cgImage else { return nil }
-        
-        let ciImage = CIImage(cgImage: cgImage)
-        filter.setValue(ciImage, forKey: kCIInputImageKey)
-        
-        guard let result = filter.outputImage else { return nil}                        // 4
-        let resultCGImage = context.createCGImage(result, from: result.extent)
-        
-        guard let cgImage = resultCGImage else {
-            return nil
-        }
-        
-        return UIImage(cgImage: cgImage)
     }
 }

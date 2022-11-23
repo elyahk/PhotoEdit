@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6E281217292BD7F0008C8F2B /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E281216292BD7F0008C8F2B /* TestView.swift */; };
+		6E92F0C9292E5E7B0049782E /* ImageFilterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E92F0C8292E5E7B0049782E /* ImageFilterManager.swift */; };
 		6EAAFEF629267A3400ECB08A /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EAAFEF529267A3400ECB08A /* GalleryView.swift */; };
 		6EAAFEF82926982D00ECB08A /* PHAssetImageBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EAAFEF72926982D00ECB08A /* PHAssetImageBridge.swift */; };
 		6EBF35FA2927DD04009BBC80 /* ImageEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EBF35F92927DD04009BBC80 /* ImageEditorView.swift */; };
@@ -43,6 +44,7 @@
 
 /* Begin PBXFileReference section */
 		6E281216292BD7F0008C8F2B /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
+		6E92F0C8292E5E7B0049782E /* ImageFilterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFilterManager.swift; sourceTree = "<group>"; };
 		6EAAFEF529267A3400ECB08A /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
 		6EAAFEF72926982D00ECB08A /* PHAssetImageBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PHAssetImageBridge.swift; sourceTree = "<group>"; };
 		6EBF35F92927DD04009BBC80 /* ImageEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageEditorView.swift; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 			children = (
 				6EF2A72A29253BFE00DDA4C3 /* PhotoLibraryManager.swift */,
 				6EAAFEF72926982D00ECB08A /* PHAssetImageBridge.swift */,
+				6E92F0C8292E5E7B0049782E /* ImageFilterManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -322,6 +325,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6EF2A6FF2925195600DDA4C3 /* Persistence.swift in Sources */,
+				6E92F0C9292E5E7B0049782E /* ImageFilterManager.swift in Sources */,
 				6EF2A72B29253BFE00DDA4C3 /* PhotoLibraryManager.swift in Sources */,
 				6E281217292BD7F0008C8F2B /* TestView.swift in Sources */,
 				6EAAFEF82926982D00ECB08A /* PHAssetImageBridge.swift in Sources */,
