@@ -45,6 +45,7 @@ struct ImageEditorView: View {
                             .resizable()
                             .frame(width: 100, height: 100)
                             .foregroundColor(.red)
+                            .scaledToFit()
                             .onTapGesture {
                                 self.image = image
                             }
@@ -53,6 +54,9 @@ struct ImageEditorView: View {
                 .frame(height: 100.0)
             }
         }
+        .navigationBarBackButtonHidden()
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle("Title")
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
@@ -152,7 +156,7 @@ struct ImageEditorView: View {
 struct ImageEditorView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            ImageEditorView(photo: Photo(thumbnail: UIImage(named: "image-1")!, asset: PHAsset()),image: UIImage(named: "image-1")!)
+                ImageEditorView(photo: Photo(thumbnail: UIImage(named: "image-1")!, asset: PHAsset()),image: UIImage(named: "image-1")!)
         }
     }
 }
@@ -198,15 +202,3 @@ class FilterImage {
         return UIImage(cgImage: cgImage)
     }
 }
-//
-//extension Photo {
-//    func getHighQualityImage(complation: @escaping (UIImage?) -> Void) {
-//        let requestImageOption = PHImageRequestOptions()
-//        requestImageOption.deliveryMode = PHImageRequestOptionsDeliveryMode.highQualityFormat
-//        
-//        let manager = PHImageManager.default()
-//        manager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode:PHImageContentMode.default, options: requestImageOption) { image, _ in
-//            complation(image)
-//        }
-//    }
-//}

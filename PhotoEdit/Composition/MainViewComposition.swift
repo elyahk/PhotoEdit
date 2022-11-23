@@ -21,17 +21,6 @@ class MainViewComposition {
         return view
     }
     
-    func galleryView() -> GalleryView {
-        var galleryView = GalleryView()
-        galleryView.events.loadPhotos = { completion in
-            self.manager.getPhotos { images in
-                completion(images)
-            }
-        }
-        
-        return galleryView
-    }
-    
     func galleryView2() -> GalleryView {
         var galleryView = GalleryView()
         galleryView.events.loadPhotos2 = { completion in

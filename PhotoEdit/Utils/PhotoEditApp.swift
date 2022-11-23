@@ -20,7 +20,6 @@ struct PhotoEditApp: App {
 //                ImageEditorView()
                 mainViewComposition.galleryView2()
                     .environmentObject(Gallery())
-                    .environment(\.managedObjectContext, persistenceController.container.viewContext)
             }
         }
     }

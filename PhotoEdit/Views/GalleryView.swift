@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Photos
 
 class Gallery: ObservableObject {
     @Published var images: [UIImage] = []
@@ -13,7 +14,6 @@ class Gallery: ObservableObject {
 
 struct GalleryView: View {
     var events: Events = .init()
-    @State var images: [UIImage] = []
     @State var photos: [Photo] = []
     @State private var presentImage: Bool = false
     @State private var selectedImage: UIImage = UIImage()
@@ -56,9 +56,6 @@ struct GalleryView: View {
             }
             .background(Color.black)
             .onAppear {
-                events.loadPhotos { images in
-                    self.images = images
-                }
                 events.loadPhotos2 { photos in
                     self.photos = photos
                 }
@@ -71,7 +68,6 @@ struct GalleryView: View {
 
 extension GalleryView {
     struct Events {
-        var loadPhotos: (@escaping ([UIImage]) -> Void) -> Void = { _ in }
         var loadPhotos2: (@escaping ([Photo]) -> Void) -> Void = { _ in }
     }
 }
@@ -79,21 +75,24 @@ extension GalleryView {
 struct GalleryView_Preview: PreviewProvider {
     static var previews: some View {
         galleryView()
+            .environmentObject(Gallery())
     }
     
     static func galleryView() -> some View {
         var view = GalleryView()
-        view.events.loadPhotos = { completion in
-            completion(images())
+        view.events.loadPhotos2 = { completion in
+            completion(photos())
         }
         
         return view
     }
     
-    static func images() -> [UIImage] {
-        var assets: [UIImage] = []
+    static func photos() -> [Photo] {
+        var assets: [Photo] = []
+        
         for i in 0...11 {
-            assets.append(UIImage(named: "image-\(i)")!)
+            let image = UIImage(named: "image-\(i)")!
+            assets.append(Photo(thumbnail: image, asset: PHAsset()))
         }
         
         return assets
