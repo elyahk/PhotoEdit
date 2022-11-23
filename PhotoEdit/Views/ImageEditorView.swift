@@ -29,11 +29,13 @@ struct ImageEditorView: View {
     var body: some View {
         VStack {
             Spacer()
-            Image(uiImage: highQualityImage ?? photo.thumbnail)
-                .resizable()
-                .scaledToFit()
-                .padding([.top], 40)
-                .frame(maxWidth: .infinity)
+            ScrollView() {
+                Image(uiImage: highQualityImage ?? photo.thumbnail)
+                    .resizable()
+                    .scaledToFit()
+                    .padding([.top], 40)
+                    .frame(maxWidth: .infinity)
+            }
             Spacer()
             ScrollView(.horizontal) {
                 LazyHGrid(
@@ -60,60 +62,38 @@ struct ImageEditorView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("Title")
         .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button {
-                    
-                } label: {
-                    Image(systemName: "bell")
-                }
-            }
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button {
-                    
-                } label: {
-                    Image(systemName: "bell")
-                }
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    
-                } label: {
-                    Image(systemName: "bell")
-                }
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    
-                } label: {
-                    Image(systemName: "bell")
-                }
-            }
             ToolbarItem(placement: .bottomBar) {
                 Button {
                     
                 } label: {
                     Text("Cancel")
+                        .foregroundColor(Color.white)
                 }
             }
             ToolbarItem(placement: .status) {
                 Button {
                     
                 } label: {
-                    Image(systemName: "bell")
+                    Image(systemName: "sun.min.fill")
+                        .foregroundColor(Color.white)
+                }
+                
+            }
+            ToolbarItem(placement: .status) {
+                Button {
+                    
+                } label: {
+                    Image(systemName: "camera.filters")
+                        .symbolRenderingMode(SwiftUI.SymbolRenderingMode.hierarchical)
+                        .foregroundColor(Color.white)
                 }
             }
             ToolbarItem(placement: .status) {
                 Button {
                     
                 } label: {
-                    Image(systemName: "bell")
-                }
-            }
-            ToolbarItem(placement: .status) {
-                Button {
-                    
-                } label: {
-                    Image(systemName: "bell")
+                    Image(systemName: "crop.rotate")
+                        .foregroundColor(Color.white)
                 }
             }
             ToolbarItem(placement: .bottomBar) {
@@ -121,6 +101,7 @@ struct ImageEditorView: View {
                     
                 } label: {
                     Text("Done")
+                        .foregroundColor(Color.yellow)
                 }
             }
         }
