@@ -83,7 +83,17 @@ class PHAssetImageBridge {
         }
         return thumbnail
     }
+    
+    
+    func getHighQualityImage(for photo: Photo) async throws -> UIImage? {
+        await withCheckedContinuation { continuation in
+            photo.getHighQualityImage { highQualityImage in
+                continuation.resume(returning: highQualityImage)
+            }
+        }
+    }
 }
+
 
 extension PHAssetImageBridge {
     enum ImageResolutionType {

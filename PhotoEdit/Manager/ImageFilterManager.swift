@@ -13,9 +13,9 @@ class ImageFilterManager {
     
     private init() { }
     
-    let context = CIContext()
+    private let context = CIContext()
     
-    var CIFilterNames = [
+    private var CIFilterNames = [
         "CIPhotoEffectChrome",
         "CIPhotoEffectFade",
         "CIPhotoEffectInstant",
@@ -26,19 +26,24 @@ class ImageFilterManager {
         "CISepiaTone"
     ]
     
-    func getFilteredImages(image: UIImage) -> [UIImage] {
-        let images: [UIImage] = CIFilterNames.map {
-            guard let filter = CIFilter(name: $0), let image = filterImage(image: image, filter: filter) else {
-                return nil
+    func getFilteredImages(image: UIImage) async -> [UIImage] {
+        await withUnsafeContinuation { continuation in
+            DispatchQueue.global(qos: .userInteractive).async {
+                var images = [UIImage]()
+                images = self.CIFilterNames.map {
+                    guard let filter = CIFilter(name: $0), let image = self.filterImage(image: image, filter: filter) else {
+                        return nil
+                    }
+                    
+                    return image
+                }.compactMap { $0 }
+                
+                continuation.resume(returning: images)
             }
-            
-            return image
-        }.compactMap { $0 }
-        
-        return images
+        }
     }
     
-    func filterImage(image: UIImage, filter: CIFilter) -> UIImage? {
+    private func filterImage(image: UIImage, filter: CIFilter) -> UIImage? {
         guard let cgImage = image.cgImage else { return nil }
         
         let ciImage = CIImage(cgImage: cgImage)
