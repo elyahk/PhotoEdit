@@ -43,6 +43,7 @@ struct AllowAccessView: View {
         }
         .background(Color.black)
         .fullScreenCover(isPresented: $presentingModal) {
+            MainViewComposition().galleryView2()
         }
     }
 }
