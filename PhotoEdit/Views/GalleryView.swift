@@ -8,15 +8,11 @@
 import SwiftUI
 import Photos
 
-class Gallery: ObservableObject {
-    @Published var images: [UIImage] = []
-}
-
 struct GalleryView: View {
     var events: Events = .init()
     @State var photos: [Photo] = []
     @State private var presentImage: Bool = false
-    @State private var selectedImage: UIImage = UIImage()
+    @State var selectedPhoto: Photo = Photo(thumbnail: UIImage(), asset: PHAsset())
     
     private var columns = [
         GridItem(.flexible(), spacing: 2.0),
@@ -34,10 +30,6 @@ struct GalleryView: View {
                     pinnedViews: []
                 ) {
                     ForEach(photos, id: \.self) { photo in
-                        NavigationLink {
-                            ImageEditorView(photo: photo)
-                        }
-                    label: {
                         Rectangle()
                             .aspectRatio(1, contentMode: .fit)
                             .overlay(
@@ -46,21 +38,35 @@ struct GalleryView: View {
                                     .scaledToFill()
                             )
                             .clipShape(Rectangle())
-                            .sheet(isPresented: $presentImage) {
-                                
+                            .onTapGesture {
+                                selectedPhoto = photo
+                                presentImage.toggle()
                             }
-                    }
-                        
                     }
                 }
             }
             .background(Color.black)
             .onAppear {
-                events.loadPhotos2 { photos in
+                events.loadPhotos { photos in
                     self.photos = photos
                 }
             }
+            .sheet(isPresented: $presentImage) {
+                imageEditorView(photo: selectedPhoto)
+            }
         }
+    }
+    
+    func imageEditorView(photo: Photo) -> ImageEditorView {
+        var view = ImageEditorView(photo: photo)
+        view.events.filteredImages = { image in
+            await ImageFilterManager.shared.getFilteredImages(image: image)
+        }
+        view.events.highQuailityImage = { photo in
+            await PhotoLibraryManager().getHighQualityImage(for: photo) ?? UIImage()
+        }
+        
+        return view
     }
 }
 
@@ -68,19 +74,18 @@ struct GalleryView: View {
 
 extension GalleryView {
     struct Events {
-        var loadPhotos2: (@escaping ([Photo]) -> Void) -> Void = { _ in }
+        var loadPhotos: (@escaping ([Photo]) -> Void) -> Void = { _ in }
     }
 }
 
 struct GalleryView_Preview: PreviewProvider {
     static var previews: some View {
         galleryView()
-            .environmentObject(Gallery())
     }
     
     static func galleryView() -> some View {
         var view = GalleryView()
-        view.events.loadPhotos2 = { completion in
+        view.events.loadPhotos = { completion in
             completion(photos())
         }
         
@@ -90,7 +95,7 @@ struct GalleryView_Preview: PreviewProvider {
     static func photos() -> [Photo] {
         var assets: [Photo] = []
         
-        for i in 0...11 {
+        for i in 0...10 {
             let image = UIImage(named: "image-\(i)")!
             assets.append(Photo(thumbnail: image, asset: PHAsset()))
         }

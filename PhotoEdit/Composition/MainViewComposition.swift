@@ -23,9 +23,11 @@ class MainViewComposition {
     
     func galleryView2() -> GalleryView {
         var galleryView = GalleryView()
-        galleryView.events.loadPhotos2 = { completion in
-            self.manager.getPhotos2 { photos in
-                completion(photos)
+        galleryView.events.loadPhotos = { completion in
+            self.manager.getPhotos { photos in
+                DispatchQueue.main.async {
+                    completion(photos)
+                }
             }
         }
         

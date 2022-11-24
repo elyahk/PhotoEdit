@@ -26,24 +26,18 @@ class PhotoLibraryManager {
         return hasAccess
     }
     
-    func getPhotos(completion: @escaping ([UIImage]) -> Void) {
+    func getPhotos(completion: @escaping ([Photo]) -> Void) {
         let result = fetchPhotosAssets()
         bridge = PHAssetImageBridge(result: result)
-        
-        bridge?.getPhotos { images in
-            DispatchQueue.main.async {
-                completion(images)
-            }
+        bridge?.getPhotos { photos in
+            completion(photos)
         }
     }
     
-    func getPhotos2(completion: @escaping ([Photo]) -> Void) {
-        let result = fetchPhotosAssets()
-        bridge = PHAssetImageBridge(result: result)
-        
-        bridge?.getPhotos2 { photos in
-            DispatchQueue.main.async {
-                completion(photos)
+    func getHighQualityImage(for photo: Photo) async -> UIImage? {
+        await withCheckedContinuation { continuation in
+            photo.getHighQualityImage { highQualityImage in
+                continuation.resume(returning: highQualityImage)
             }
         }
     }

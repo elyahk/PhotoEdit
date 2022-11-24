@@ -19,7 +19,7 @@ struct PhotoEditApp: App {
             } else {
 //                ImageEditorView()
                 mainViewComposition.galleryView2()
-                    .environmentObject(Gallery())
+//                    .environmentObject(Gallery())
             }
         }
     }

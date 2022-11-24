@@ -30,7 +30,7 @@ class PHAssetImageBridge {
         self.result = result
     }
     
-    func getPhotos2(type: ImageResolutionType = .thumbnail(), completion: @escaping ([Photo]) -> Void) {
+    func getPhotos(type: ImageResolutionType = .thumbnail(), completion: @escaping ([Photo]) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
             var photos: [Photo] = []
@@ -42,23 +42,6 @@ class PHAssetImageBridge {
                     let image = self.getImage(from: phAsset, type: type)
                     let photo = Photo(thumbnail: image, asset: phAsset)
                     photos.append(photo)
-                }
-            }
-            
-            completion(photos)
-        }
-    }
-    
-    func getPhotos(type: ImageResolutionType = .thumbnail(), completion: @escaping ([UIImage]) -> Void) {
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard let self = self else { return }
-            var photos: [UIImage] = []
-            
-            switch type {
-            case .thumbnail:
-                for index in 0..<self.result.count {
-                    let phAsset = self.result[index]
-                    photos.append(self.getImage(from: phAsset, type: type))
                 }
             }
             
@@ -82,15 +65,6 @@ class PHAssetImageBridge {
             thumbnail = image ?? UIImage()
         }
         return thumbnail
-    }
-    
-    
-    func getHighQualityImage(for photo: Photo) async throws -> UIImage? {
-        await withCheckedContinuation { continuation in
-            photo.getHighQualityImage { highQualityImage in
-                continuation.resume(returning: highQualityImage)
-            }
-        }
     }
 }
 
