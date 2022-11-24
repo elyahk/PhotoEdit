@@ -40,31 +40,32 @@ struct ImageEditorView: View {
                     LazyHGrid(
                         rows: columns,
                         alignment: .top,
-                        spacing: 2.0,
+                        spacing: 4.0,
                         pinnedViews: []
                     ) {
                         ForEach(filteredImages, id: \.self) { filteredImage in
-                            GeometryReader { geo in
-                                let midX = geo.frame(in: .global).midX
-                                let difX = midX - screenWidth/2
+                            VStack {
+                                let isSelected = filteredImage == highQualityImage
+                                Circle()
+                                    .fill(isSelected ? .white : .clear)
+                                    .frame(width: 8, height: 8)
+                                    
                                 Image(uiImage: filteredImage)
                                     .resizable()
                                     .frame(width: 50, height: 50)
                                     .cornerRadius(4.0)
                                     .foregroundColor(.red)
                                     .scaledToFill()
-                                    .rotation3DEffect(.degrees(difX / 8.0), axis: (x: 0, y: 1, z: 0))
                                     .onTapGesture {
                                         self.highQualityImage = filteredImage
                                     }
+                                    .border(isSelected ? Color.white : Color.clear, width: 2.0)
+                                    .frame(width: 50, height: 50)
                             }
-                            .frame(width: 50, height: 50)
                         }
                     }
-                    .frame(height: 50)
-                    
-                    Spacer()
-                        .frame(height: 50.0)
+                    .frame(height: 60)
+                    .padding([.bottom], 20)
                 }
                 .scrollIndicators(.never)
                 .tabViewStyle(PageTabViewStyle())
