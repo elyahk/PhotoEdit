@@ -24,6 +24,17 @@ struct GalleryView: View {
     var body: some View {
         NavigationStack {
             ZStack {
+                VStack {
+                    Spacer()
+                        Text("Loading...")
+                            .foregroundColor(.white)
+                            .font(.title)
+                        LottieView(lottieFile: "pizza-animation")
+                            .frame(width: 300, height: 300)
+                    Spacer()
+                }
+                .opacity(isLoading ? 1 : 0)
+                
                 ScrollView {
                     LazyVGrid(
                         columns: columns,
@@ -47,25 +58,13 @@ struct GalleryView: View {
                         }
                     }
                 }
-                .background(Color.black)
+                .background(Color.clear)
                 .onAppear {
                     Task {
                         let photos = await events.loadPhotos()
                         self.photos = photos
-                        isLoading.toggle()
+                        isLoading = false
                     }
-                }
-                
-                VStack {
-                    Spacer()
-                    if isLoading {
-                        Text("Loading...")
-                            .foregroundColor(.white)
-                            .font(.title)
-                        LottieView(lottieFile: "pizza-animation")
-                            .frame(width: .infinity, height: 300)
-                    }
-                    Spacer()
                 }
             }
             .background(Color.black)

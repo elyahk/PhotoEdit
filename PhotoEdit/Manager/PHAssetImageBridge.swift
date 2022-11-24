@@ -30,7 +30,7 @@ class PHAssetImageBridge {
         self.result = result
     }
     
-    func getPhotos(type: ImageResolutionType = .thumbnail(), completion: @escaping ([Photo]) -> Void, page: Int = 0) {
+    func getPhotos(type: ImageResolutionType = .thumbnail(), completion: @escaping ([Photo]) -> Void, page: Int = 1) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
             var photos: [Photo] = []
