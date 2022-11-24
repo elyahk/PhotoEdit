@@ -13,6 +13,7 @@ struct GalleryView: View {
     @State var photos: [Photo] = []
     @State private var presentImage: Bool = false
     @State var selectedPhoto: Photo = Photo(thumbnail: UIImage(), asset: PHAsset())
+    @State var isLoading: Bool = true
     
     private var columns = [
         GridItem(.flexible(), spacing: 2.0),
@@ -22,44 +23,52 @@ struct GalleryView: View {
     
     var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVGrid(
-                    columns: columns,
-                    alignment: .center,
-                    spacing: 2.0,
-                    pinnedViews: []
-                ) {
-                    ForEach(photos, id: \.self) { photo in
-                        NavigationLink {
-                            imageEditorView(photo: photo)
-                        } label: {
-                            Rectangle()
-                                .aspectRatio(1, contentMode: .fit)
-                                .overlay(
-                                    Image(uiImage: photo.thumbnail)
-                                        .resizable()
-                                        .scaledToFill()
-                                )
-                                .clipShape(Rectangle())
-//                                .onTapGesture {
-////                                    selectedPhoto = photo
-////                                    presentImage.toggle()
-//                                }
+            ZStack {
+                ScrollView {
+                    LazyVGrid(
+                        columns: columns,
+                        alignment: .center,
+                        spacing: 2.0,
+                        pinnedViews: []
+                    ) {
+                        ForEach(photos, id: \.self) { photo in
+                            NavigationLink {
+                                imageEditorView(photo: photo)
+                            } label: {
+                                Rectangle()
+                                    .aspectRatio(1, contentMode: .fit)
+                                    .overlay(
+                                        Image(uiImage: photo.thumbnail)
+                                            .resizable()
+                                            .scaledToFill()
+                                    )
+                                    .clipShape(Rectangle())
+                            }
                         }
-
                     }
+                }
+                .background(Color.black)
+                .onAppear {
+                    Task {
+                        let photos = await events.loadPhotos()
+                        self.photos = photos
+                        isLoading.toggle()
+                    }
+                }
+                
+                VStack {
+                    Spacer()
+                    if isLoading {
+                        Text("Loading...")
+                            .foregroundColor(.white)
+                            .font(.title)
+                        LottieView(lottieFile: "pizza-animation")
+                            .frame(width: .infinity, height: 300)
+                    }
+                    Spacer()
                 }
             }
             .background(Color.black)
-            .onAppear {
-                Task {
-                    let photos = await events.loadPhotos()
-                    self.photos = photos
-                }
-            }
-//            .sheet(isPresented: $presentImage) {
-//                imageEditorView(photo: selectedPhoto)
-//            }
         }
     }
     

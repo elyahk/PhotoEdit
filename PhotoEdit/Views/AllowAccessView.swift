@@ -13,6 +13,16 @@ struct AllowAccessView: View {
     
     var body: some View {
         VStack {
+            Text("Give permission to your photos")
+                .font(.title)
+                .foregroundColor(.white)
+                .padding([.top])
+            Text("You need to give access to your photos to use this application and make the photos beautiful")
+                .foregroundColor(.white)
+                .font(.callout)
+                .padding([.leading, .trailing])
+                .padding(.top, 16)
+            LottieView(lottieFile: "camera-access-animation", loopMode: .playOnce)
             Spacer()
             Button {
                 events.requestPermission { access in
@@ -33,7 +43,6 @@ struct AllowAccessView: View {
         }
         .background(Color.black)
         .fullScreenCover(isPresented: $presentingModal) {
-//            GalleryView(events: <#T##Events#>)
         }
     }
 }

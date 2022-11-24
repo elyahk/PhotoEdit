@@ -77,7 +77,7 @@ struct ImageEditorView: View {
         .toolbar {
             ToolbarItem(placement: .bottomBar) {
                 Button {
-                    
+                    self.mode.wrappedValue.dismiss()
                 } label: {
                     Text("Cancel")
                         .foregroundColor(Color.white)
