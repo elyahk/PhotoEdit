@@ -37,9 +37,9 @@ class PHAssetImageBridge {
             
             switch type {
             case .thumbnail:
-                var leftId = (page - 1) * 25
+                var leftId = (page - 1) * 100
                 leftId = leftId < 0 ? 0 : leftId
-                var righId = page * 25
+                var righId = page * 100
                 righId = righId >= self.result.count ? self.result.count : righId
                 
                 for index in leftId..<righId {

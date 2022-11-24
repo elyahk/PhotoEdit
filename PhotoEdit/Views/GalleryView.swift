@@ -26,34 +26,36 @@ struct GalleryView: View {
             ZStack {
                 VStack {
                     Spacer()
-                        Text("Loading...")
-                            .foregroundColor(.white)
-                            .font(.title)
-                        LottieView(lottieFile: "pizza-animation")
-                            .frame(width: 300, height: 300)
+                    Text("Loading...")
+                        .foregroundColor(.white)
+                        .font(.title)
+                    LottieView(lottieFile: "pizza-animation")
+                        .frame(width: 300, height: 300)
                     Spacer()
                 }
                 .opacity(isLoading ? 1 : 0)
                 
                 ScrollView {
-                    LazyVGrid(
-                        columns: columns,
-                        alignment: .center,
-                        spacing: 2.0,
-                        pinnedViews: []
-                    ) {
-                        ForEach(photos, id: \.self) { photo in
-                            NavigationLink {
-                                imageEditorView(photo: photo)
-                            } label: {
-                                Rectangle()
-                                    .aspectRatio(1, contentMode: .fit)
-                                    .overlay(
-                                        Image(uiImage: photo.thumbnail)
-                                            .resizable()
-                                            .scaledToFill()
-                                    )
-                                    .clipShape(Rectangle())
+                    ScrollViewReader { proxy in
+                        LazyVGrid(
+                            columns: columns,
+                            alignment: .center,
+                            spacing: 2.0,
+                            pinnedViews: []
+                        ) {
+                            ForEach(photos, id: \.self) { photo in
+                                NavigationLink {
+                                    imageEditorView(photo: photo)
+                                } label: {
+                                    Rectangle()
+                                        .aspectRatio(1, contentMode: .fit)
+                                        .overlay(
+                                            Image(uiImage: photo.thumbnail)
+                                                .resizable()
+                                                .scaledToFill()
+                                        )
+                                        .clipShape(Rectangle())
+                                }
                             }
                         }
                     }
