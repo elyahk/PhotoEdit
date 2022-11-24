@@ -30,14 +30,19 @@ class PHAssetImageBridge {
         self.result = result
     }
     
-    func getPhotos(type: ImageResolutionType = .thumbnail(), completion: @escaping ([Photo]) -> Void) {
+    func getPhotos(type: ImageResolutionType = .thumbnail(), completion: @escaping ([Photo]) -> Void, page: Int = 0) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
             var photos: [Photo] = []
             
             switch type {
             case .thumbnail:
-                for index in 0..<self.result.count {
+                var leftId = (page - 1) * 25
+                leftId = leftId < 0 ? 0 : leftId
+                var righId = page * 25
+                righId = righId >= self.result.count ? self.result.count : righId
+                
+                for index in leftId..<righId {
                     let phAsset = self.result[index]
                     let image = self.getImage(from: phAsset, type: type)
                     let photo = Photo(thumbnail: image, asset: phAsset)
