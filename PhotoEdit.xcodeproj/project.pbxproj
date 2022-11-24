@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6E0A0CF3292FB9EF00988160 /* ScreenUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0A0CF2292FB9EF00988160 /* ScreenUtils.swift */; };
 		6E281217292BD7F0008C8F2B /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E281216292BD7F0008C8F2B /* TestView.swift */; };
 		6E92F0C9292E5E7B0049782E /* ImageFilterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E92F0C8292E5E7B0049782E /* ImageFilterManager.swift */; };
 		6E92F0CB292E7F770049782E /* ZoomableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E92F0CA292E7F770049782E /* ZoomableScrollView.swift */; };
@@ -44,6 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6E0A0CF2292FB9EF00988160 /* ScreenUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenUtils.swift; sourceTree = "<group>"; };
 		6E281216292BD7F0008C8F2B /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		6E92F0C8292E5E7B0049782E /* ImageFilterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFilterManager.swift; sourceTree = "<group>"; };
 		6E92F0CA292E7F770049782E /* ZoomableScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomableScrollView.swift; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 				6EF2A72A29253BFE00DDA4C3 /* PhotoLibraryManager.swift */,
 				6EAAFEF72926982D00ECB08A /* PHAssetImageBridge.swift */,
 				6E92F0C8292E5E7B0049782E /* ImageFilterManager.swift */,
+				6E0A0CF2292FB9EF00988160 /* ScreenUtils.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -332,6 +335,7 @@
 				6E92F0C9292E5E7B0049782E /* ImageFilterManager.swift in Sources */,
 				6EF2A72B29253BFE00DDA4C3 /* PhotoLibraryManager.swift in Sources */,
 				6E281217292BD7F0008C8F2B /* TestView.swift in Sources */,
+				6E0A0CF3292FB9EF00988160 /* ScreenUtils.swift in Sources */,
 				6EAAFEF82926982D00ECB08A /* PHAssetImageBridge.swift in Sources */,
 				6EF2A72E29253EBB00DDA4C3 /* MainViewComposition.swift in Sources */,
 				6EF2A7022925195600DDA4C3 /* PhotoEdit.xcdatamodeld in Sources */,
@@ -500,6 +504,8 @@
 				DEVELOPMENT_TEAM = 8T58FH89LR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Photos;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "The app need your photos";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -531,6 +537,8 @@
 				DEVELOPMENT_TEAM = 8T58FH89LR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Photos;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "The app need your photos";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

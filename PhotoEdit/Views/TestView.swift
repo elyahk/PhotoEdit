@@ -14,8 +14,6 @@ struct TestView: View {
         VStack {
             Text("State: \(state)")
         }
-        
-        
     }
 }
 

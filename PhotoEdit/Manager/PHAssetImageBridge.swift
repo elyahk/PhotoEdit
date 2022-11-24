@@ -55,19 +55,20 @@ class PHAssetImageBridge {
         var thumbnail = UIImage()
         option.isSynchronous = true
         var size: CGSize = .zero
+        let scale: CGFloat = CGFloat(asset.pixelWidth) / CGFloat(asset.pixelHeight)
         
         switch type {
         case let .thumbnail(width, height):
-            size = CGSize(width: 100.0, height: 100.0)
+            let width = screenWidth
+            size = CGSize(width:  width, height: width / scale)
+//            size = CGSize(width:  300, height: 300/scale)
         }
-        
         manager.requestImage(for: asset, targetSize: size, contentMode: .aspectFill, options: option) { image, info in
             thumbnail = image ?? UIImage()
         }
         return thumbnail
     }
 }
-
 
 extension PHAssetImageBridge {
     enum ImageResolutionType {

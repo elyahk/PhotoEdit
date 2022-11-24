@@ -23,12 +23,21 @@ class MainViewComposition {
     
     func galleryView2() -> GalleryView {
         var galleryView = GalleryView()
-        galleryView.events.loadPhotos = { completion in
-            self.manager.getPhotos { photos in
-                DispatchQueue.main.async {
-                    completion(photos)
+        galleryView.events.loadPhotos = {
+            await withUnsafeContinuation { continuation in
+                self.manager.getPhotos { photos in
+                    DispatchQueue.main.async {
+                        continuation.resume(returning: photos )
+                    }
                 }
             }
+        }
+            galleryView.events.filteredImages = { image in
+                await ImageFilterManager.shared.getFilteredImages(image: image)
+            }
+            galleryView.events.highQuailityImage = { photo in
+                await PhotoLibraryManager().getHighQualityImage(for: photo) ?? UIImage()
+
         }
         
         return galleryView

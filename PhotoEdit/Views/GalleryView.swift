@@ -30,41 +30,43 @@ struct GalleryView: View {
                     pinnedViews: []
                 ) {
                     ForEach(photos, id: \.self) { photo in
-                        Rectangle()
-                            .aspectRatio(1, contentMode: .fit)
-                            .overlay(
-                                Image(uiImage: photo.thumbnail)
-                                    .resizable()
-                                    .scaledToFill()
-                            )
-                            .clipShape(Rectangle())
-                            .onTapGesture {
-                                selectedPhoto = photo
-                                presentImage.toggle()
-                            }
+                        NavigationLink {
+                            imageEditorView(photo: photo)
+                        } label: {
+                            Rectangle()
+                                .aspectRatio(1, contentMode: .fit)
+                                .overlay(
+                                    Image(uiImage: photo.thumbnail)
+                                        .resizable()
+                                        .scaledToFill()
+                                )
+                                .clipShape(Rectangle())
+//                                .onTapGesture {
+////                                    selectedPhoto = photo
+////                                    presentImage.toggle()
+//                                }
+                        }
+
                     }
                 }
             }
             .background(Color.black)
             .onAppear {
-                events.loadPhotos { photos in
+                Task {
+                    let photos = await events.loadPhotos()
                     self.photos = photos
                 }
             }
-            .sheet(isPresented: $presentImage) {
-                imageEditorView(photo: selectedPhoto)
-            }
+//            .sheet(isPresented: $presentImage) {
+//                imageEditorView(photo: selectedPhoto)
+//            }
         }
     }
     
     func imageEditorView(photo: Photo) -> ImageEditorView {
         var view = ImageEditorView(photo: photo)
-        view.events.filteredImages = { image in
-            await ImageFilterManager.shared.getFilteredImages(image: image)
-        }
-        view.events.highQuailityImage = { photo in
-            await PhotoLibraryManager().getHighQualityImage(for: photo) ?? UIImage()
-        }
+        view.events.filteredImages = events.filteredImages
+        view.events.highQuailityImage = events.highQuailityImage
         
         return view
     }
@@ -74,7 +76,9 @@ struct GalleryView: View {
 
 extension GalleryView {
     struct Events {
-        var loadPhotos: (@escaping ([Photo]) -> Void) -> Void = { _ in }
+        var loadPhotos: (() async -> [Photo]) = { [] }
+        var filteredImages: ((UIImage) async -> [UIImage]) = { _ in [] }
+        var highQuailityImage: ((Photo) async -> UIImage) = { _ in UIImage() }
     }
 }
 
@@ -85,9 +89,15 @@ struct GalleryView_Preview: PreviewProvider {
     
     static func galleryView() -> some View {
         var view = GalleryView()
-        view.events.loadPhotos = { completion in
-            completion(photos())
+        view.events.loadPhotos = {
+            await withUnsafeContinuation { continuation in
+                continuation.resume(returning: photos())
+            }
         }
+        view.events.filteredImages = { _ in
+            return photos().map { $0.thumbnail }
+        }
+        view.events.highQuailityImage = { $0.thumbnail }
         
         return view
     }
@@ -95,7 +105,7 @@ struct GalleryView_Preview: PreviewProvider {
     static func photos() -> [Photo] {
         var assets: [Photo] = []
         
-        for i in 0...10 {
+        for i in 1...11 {
             let image = UIImage(named: "image-\(i)")!
             assets.append(Photo(thumbnail: image, asset: PHAsset()))
         }

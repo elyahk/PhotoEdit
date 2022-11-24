@@ -10,14 +10,14 @@ import CoreImage
 import Photos
 
 struct ImageEditorView: View {
+    @Environment(\.presentationMode) var mode: Binding<PresentationMode>
+    
     var events: Events = .init()
-    @State var photo: Photo
+    var photo: Photo
     @State var filteredImages: [UIImage] = []
-    @State var currentIndex = 0
     @State var highQualityImage: UIImage?
     
-    
-    init(photo: Photo) {
+    init(photo: Photo, highQualityImage: UIImage? = nil) {
         self.photo = photo
     }
     
@@ -35,32 +35,41 @@ struct ImageEditorView: View {
             }
             .scrollIndicators(.never)
             
-            
-            ScrollView(.horizontal) {
-                LazyHGrid(
-                    rows: columns,
-                    alignment: .top,
-                    spacing: 2.0,
-                    pinnedViews: []
-                ) {
-                    ForEach(filteredImages, id: \.self) { filteredImage in
-                        Image(uiImage: filteredImage)
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                            .foregroundColor(.red)
-                            .scaledToFit()
-                            .onTapGesture {
-                                self.highQualityImage = filteredImage
+            ScrollViewReader { _ in
+                ScrollView(.horizontal) {
+                    LazyHGrid(
+                        rows: columns,
+                        alignment: .top,
+                        spacing: 2.0,
+                        pinnedViews: []
+                    ) {
+                        ForEach(filteredImages, id: \.self) { filteredImage in
+                            GeometryReader { geo in
+                                let midX = geo.frame(in: .global).midX
+                                let difX = midX - screenWidth/2
+                                Image(uiImage: filteredImage)
+                                    .resizable()
+                                    .frame(width: 50, height: 50)
+                                    .cornerRadius(4.0)
+                                    .foregroundColor(.red)
+                                    .scaledToFill()
+                                    .rotation3DEffect(.degrees(difX / 8.0), axis: (x: 0, y: 1, z: 0))
+                                    .onTapGesture {
+                                        self.highQualityImage = filteredImage
+                                    }
                             }
+                            .frame(width: 50, height: 50)
+                        }
                     }
+                    .frame(height: 50)
+                    
+                    Spacer()
+                        .frame(height: 50.0)
                 }
-                .frame(height: 50)
-                
-                Spacer()
-                    .frame(height: 50.0)
+                .scrollIndicators(.never)
+                .tabViewStyle(PageTabViewStyle())
+                .padding([.bottom, .top])
             }
-            .scrollIndicators(.never)
-            .padding([.bottom, .top])
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
@@ -102,7 +111,7 @@ struct ImageEditorView: View {
             }
             ToolbarItem(placement: .bottomBar) {
                 Button {
-                    
+                    self.mode.wrappedValue.dismiss()
                 } label: {
                     Text("Done")
                         .foregroundColor(Color.yellow)
